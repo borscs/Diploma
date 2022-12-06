@@ -43,13 +43,6 @@ export default function Home() {
                         >Let's Start
                         </button>
                     </Link>
-                    <Link to='/tutorials'>
-                        <button
-                            className="btn start-btn"
-                        >Tutorials
-                        </button>
-                    </Link>
-
                 </div>
             </div>
         </div>

@@ -4,81 +4,62 @@ export const poseInstructions = {
         'Hajlítsa meg az egyik lábát térdben. Válassza ki azt a lábat, amelyet először be akar hajtani. Ha a bal lábad az álló lábad, tartsd a bal lábadat a talajon, és lassan hajlítsd be a jobb lábadat a jobb térdnél úgy, hogy a jobb lábfejed a bal belső combodhoz feküdjön (féllótuszként ismert). pozíció a Bikram jógában). Irányítsa behajlított lábának térdét kifelé, el a testétől.',
         'Hosszabbítsa meg testét. Kulcsolja össze a kezét az Anjali Mudrában (más néven „imapozíció”)',
         'Tartsa és ismételje meg. Tartsa meg a pózt, ameddig szükséges, ügyelve a megfelelő légzésre. Ha készen áll a lábváltásra, lélegezzen ki, és térjen vissza hegyi pózba, hogy újrakezdje.'
-        ],
+    ],
     Cobra: [
-        'Lie prone on the floor. Stretch your legs back, tops of the feet on the floor. Spread your hands on the floor under your shoulders. Hug the elbows back into your body.',
-        'On an inhalation, begin to straighten the arms to lift the chest off the floor, going only to the height at which you can maintain a connection through your pubis to your legs. Press the tailbone toward the pubis and lift the pubis toward the navel. Narrow the hip points. Firm but don’t harden the buttocks.',
-        'Firm the shoulder blades against the back, puffing the side ribs forward. Lift through the top of the sternum but avoid pushing the front ribs forward, which only hardens the lower back. Distribute the backbend evenly throughout the entire spine.',
-        'Hold the pose anywhere from 15 to 30 seconds, breathing easily. Release back to the floor with an exhalation.',
-    ],
+        'Feküdj hanyatt a padlón. Nyújtsa ki a lábát hátra, a lábfejek a padlón. Nyújtsa szét a kezét a padlón a vállai alatt. Ölelje vissza a könyökét a testébe.',
+        'Belégzéskor kezdje el kiegyenesíteni a karjait, hogy felemelje a mellkasát a padlóról, és csak olyan magasságig menjen, amelynél fenn tudja tartani a kapcsolatot a szeméremtestén keresztül a lábaival. Nyomja a farokcsontot a szemérem felé, és emelje fel a szeméremtestet a köldök felé. Szűkítse le a csípőpontokat. Feszes, de ne keményítse meg a fenekét.',
+        '– Erősítsd meg a lapockákat a hátnak, az oldalsó bordákat előre pöffeszkedve. Emelje át a szegycsont felső részét, de ne nyomja előre az első bordákat, mert ez csak a hát alsó részét keményíti meg. A hátrahajlítást egyenletesen oszd el az egész gerincen.',
+        'Tartsa meg a pózt 15-30 másodpercig, és lélegezzen könnyedén. Egy kilégzéssel engedd vissza a padlóra.',],
     Dog: [
-        'Come onto your hands and knees, with your hands a tiny bit in front of your shoulders and your knees directly below your hips. Spread your palms, rooting down through all four corners of your hands, and turn your toes under.',
-        'Exhale and lift your knees from the floor, at first keeping your knees slightly bent and your heels lifted off the floor. Lengthen your tailbone away from the back of your pelvis, lift the sitting bones toward the ceiling, and draw your inner legs from your inner ankles up through your groins.',
-        'On an exhalation, push your top thighs back and stretch your heels toward the floor. Straighten your knees without locking them.',
-        'Firm your outer arms and press the bases of your index fingers actively into the floor. Lift along your inner arms from the wrists to the tops of the shoulders. Firm your shoulder blades against your back, then widen them and draw them toward your tailbone. Keep your head between your upper arms.',
-        'Stay in the pose for 10 or more breaths, then bend your knees on an exhalation and lower yourself into Child’s Pose',
-
-    ],
+        'Gyere fel a kezére és a térdére, a kezeit egy kicsit a vállai elé, a térdét pedig közvetlenül a csípője alá. Terjessze szét a tenyerét, gyökerezzen le a kezek mind a négy sarkában, és fordítsa alá a lábujjait.',
+        'Lélegezzen ki, és emelje fel a térdét a padlóról, először tartsa enyhén behajlított térdét, és emelje fel a sarkát a padlóról. Hosszabbítsa meg a farokcsontját a medence hátsó részétől, emelje fel az ülőcsontokat a mennyezet felé, és húzza fel a belső lábait a belső bokától az ágyékán keresztül.',
+        'Kilégzéskor tolja hátra a felső combját, és nyújtsa ki a sarkát a padló felé. Nyújtsa ki a térdét anélkül, hogy bezárná őket.',
+        '– Feszítsd meg a külső karjaidat, és nyomd aktívan a mutatóujjad tövét a padlóba. Emelje fel a belső karját a csuklótól a vállak tetejéig. Erősítse a lapockáit a hátához, majd szélesítse ki és húzza a farokcsontja felé. Tartsa a fejét a felkarjai között.',
+        'Maradjon a pózban 10 vagy több lélegzetet, majd hajlítsa be a térdét egy kilégzésre, és süllyedjen gyermekpózba'],
     Chair: [
-        'Stand straight and tall with your feet slightly wider than hip­-width apart and your arms at your sides.',
-        'Inhale and lift your arms next to your ears, stretching them straight and parallel with wrists and fingers long. Keep your shoulders down and spine neutral.',
-        'Exhale as you bend your knees, keeping your thighs and knees parallel. Lean your torso forward to create a right angle with the tops of your thighs. Keep your neck and head in line with your torso and arms. Hold for 30 seconds to 1 minute.',
+        'Álljon egyenesen és magasan úgy, hogy a lábai kissé szélesebbek legyenek, mint a csípő szélessége, és a karjai az oldalain legyenek.',
+        '– Lélegezz be, és emeld fel a karjaidat a füled mellett, egyenesen és párhuzamosan nyújtva azokat a csuklókkal és az ujjakkal. Tartsa a vállát lefelé, a gerincét pedig tartsa semlegesen.',
+        '– Lélegezz ki, miközben behajlítod a térdeidet, miközben a combjaidat és a térdeidet párhuzamosan tartod. Döntse előre a törzsét, hogy derékszöget alakítson ki a combjaival. Tartsa a nyakát és a fejét egy vonalban a törzsével és a karjával. Tartsa lenyomva 30 másodperctől 1 percig.',
     ],
     Warrior: [
-        'Begin in lunge with your front knee bent, your back leg straight and your back heel lifted. Your hips and chest should be squared to front of the mat. Raise your arms above your head.',
-        'Move your hands to your heart, with palms pressed against each other in a prayer position. Lean forward until your back leg extends straight back, even with your hips. Keep your foot flexed and your gaze downward.',
-        'Make sure your standing leg is strong and straight, but not locked at knee. Reach your arms forward so your body forms a “T” shape.',
-        'Source classpass - https://classpass.com/movements/warrior-3-pose'
+        'Kezdje a kitörést úgy, hogy az elülső térdét behajlítja, a hátsó lábát egyenesen, a hátsó sarkát pedig felemelve. A csípődnek és a mellkasodnak a szőnyeg elejéhez képest szögletesnek kell lennie. Emeld fel a karjaidat a fejed fölé.',
+        'Tartsd a kezed a szívedhez, tenyereidet egymáshoz nyomva imádkozó helyzetben. Hajoljon előre, amíg a hátsó lába egyenesen hátranyúlik, még a csípőjével együtt is. Tartsa a lábát hajlítva, és a tekintetét lefelé.',
+        'Győződjön meg arról, hogy az álló lába erős és egyenes, de ne legyen rögzítve a térdénél. Nyújtsd előre a karjaidat, hogy tested „T” alakot formázzon.',
+        'Classpass forrása – https://classpass.com/movements/warrior-3-pose'
     ],
     Traingle: [
-        'Begin standing, then lightly jump your feet apart to a wide position about three to four feet apart. Turn your left foot out and turn to face that direction. Take a slight bend in your left leg and raise your arms out on your sides, forming a “T” shape.',
-        'Straighten through your left leg, then hinge and reach your torso over your left leg as your hips jut back. Rotate your left palm so it faces the ceiling, and gaze out over your left arm.',
-        'Maintain a long, straight spine as you reach your left hand to the mat, placing it in front of your left foot. If you feel off balance, bring in your back leg closer to shorten your stance. Gaze towards your right arm, which should be extended overhead. Hold and repeat on the other side.',
+        'Kezdjen állni, majd enyhén ugorja szét a lábát egy széles pozícióba, körülbelül három-négy láb távolságra egymástól. Fordítsa ki a bal lábát, és forduljon ebbe az irányba. Hajlítsa meg enyhén a bal lábát, és emelje ki a karjait az oldalára, így „T” alakot formál.',
+        'Egyenesítse ki a bal lábát, majd csukljon, és érje el a törzsét a bal lábán, miközben a csípője hátranyúlik. Forgassa el bal tenyerét úgy, hogy az a mennyezet felé nézzen, és nézzen ki a bal karja fölé.',
+        'Tartson hosszú, egyenes gerincet, miközben bal kezével a szőnyeghez nyúl, és tegye azt a bal lába elé. Ha úgy érzi, hogy nincs egyensúlyban, húzza közelebb a hátsó lábát, hogy lerövidítse az álláspontját. Nézzen a jobb karja felé, amelyet ki kell nyújtani a feje fölé. Tartsa meg és ismételje meg a másik oldalon.',
     ],
     Shoulderstand: [
-        'Start with a stack of two folded blankets. Lay down on your mat aligning shoulders onto the blankets. With legs bent and feet on the floor (as if setting up for bridge pose) begin to walk your shoulders underneath your upper back feeling the chest gently rising.',
-        'Lift your hips off of the mat coming into bridge pose and extend your arms onto the ground, palms facing down as if your hands could touch your heels. Press firmly into the palms using them as leverage to lift onto the balls of the feet and extend one leg up. Bend at the elbows, place your hands on your low back creating a shelf, and then extend the next leg up.',
-        "Once you raise the legs, don't turn your head to the side to look around the room, since you can injure your neck. Keep your gaze upward and your neck straight.",
-        "Lift up through the balls of your feet. Walk your hands further up the back for more stability. Feel the chest reaching towards the chin to support opening the upper back.",
-        "Move your hips toward the front of the room and your feet toward the back of the room to straighten the body. The correct alignment is with the hips over the shoulders and feet over the hips. Ask your teacher or a friend to help you determine if your legs are perpendicular to the floor.",
-        "Stay in the pose for up to 10 breaths",
+        'Kezdje egy halom két összehajtogatott takaróval. Feküdjön le a szőnyegre, és igazítsa a vállát a takarókra. Behajlított lábakkal és a lábakkal a padlón (mintha hídpózba állna) elkezdi járni a vállát a felső háta alatt, érezve, hogy a mellkas finoman emelkedik.',
+        'Emelje fel a csípőjét a szőnyegről, amikor bridzspozícióba lép, és nyújtsa ki karjait a földre, tenyerét lefelé fordítva, mintha kezei megérinthetnék a sarkát. Erősen nyomja be a tenyerébe, és használja őket emelőként, hogy felemelje a lábgombákat, és nyújtsa ki az egyik lábát. Hajlítsa meg a könyökét, tegye a kezét a deréktájra, és hozzon létre egy polcot, majd nyújtsa fel a következő lábát.',
+        'Ha egyszer felemeli a lábát, ne fordítsa oldalra a fejét, hogy körülnézzen a szobában, mert megsérülhet a nyaka. Tekintse felfelé és a nyakába egyenesen.',
+        'Emeld fel a lábad golyóin keresztül. Menj a kezeddel hátrébb a nagyobb stabilitás érdekében. Érezd, ahogy a mellkas az áll felé nyúlik, hogy támogassa a hát felső részének kinyitását.',
+        'Maradj a pózban legfeljebb 10 lélegzetet',
     ]
 
 }
 
-
-export const tutorials = [
-    '1. When App ask for permission of camera, allow it to access to capture pose.',
-    '2. Select what pose you want to do in the dropdown.',
-    '3. Read Instrctions of that pose so you will know how to do that pose.',
-    '4. Click on Start pose and see the image of the that pose in the right side and replecate that image in front of camera.',
-    '5. If you will do correctly the skeleton over the video will become green in color and sound will start playing'
-]
-
-export const fixCamera = [
-    'Solution 1. Make sure you have allowed the permission of camera, if you have denined the permission, go to setting of your browser to allow the access of camera to the application.',
-    'Solution 2. Make sure no any other application is not accessing camera at that time, if yes, close that application',
-    'Solution 3. Try to close all the other opened broswers'
-]
-
 export const POINTS = {
-    NOSE : 0,
-    LEFT_EYE : 1,
-    RIGHT_EYE : 2,
-    LEFT_EAR : 3,
-    RIGHT_EAR : 4,
-    LEFT_SHOULDER : 5,
-    RIGHT_SHOULDER : 6,
-    LEFT_ELBOW : 7,
-    RIGHT_ELBOW : 8,
-    LEFT_WRIST : 9,
-    RIGHT_WRIST : 10,
-    LEFT_HIP : 11,
-    RIGHT_HIP : 12,
-    LEFT_KNEE : 13,
-    RIGHT_KNEE : 14,
-    LEFT_ANKLE : 15,
-    RIGHT_ANKLE : 16,
+    NOSE: 0,
+    LEFT_EYE: 1,
+    RIGHT_EYE: 2,
+    LEFT_EAR: 3,
+    RIGHT_EAR: 4,
+    LEFT_SHOULDER: 5,
+    RIGHT_SHOULDER: 6,
+    LEFT_ELBOW: 7,
+    RIGHT_ELBOW: 8,
+    LEFT_WRIST: 9,
+    RIGHT_WRIST: 10,
+    LEFT_HIP: 11,
+    RIGHT_HIP: 12,
+    LEFT_KNEE: 13,
+    RIGHT_KNEE: 14,
+    LEFT_ANKLE: 15,
+    RIGHT_ANKLE: 16,
 }
 
 export const keypointConnections = {

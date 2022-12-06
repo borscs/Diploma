@@ -1,5 +1,5 @@
 .yoga-container {
-    background: linear-gradient(100deg, #FF8C00, #FFA500);
+    background: linear-gradient(100deg, #59ff00, #FFA500);
     min-width: 100vw;
     min-height: 100vh;
 }
@@ -35,8 +35,8 @@
 }
 .pose-img {
     position: absolute;
-    right: 120px;
-    top: 80px;
+    left: 120px;
+    top: 250px;
     width: 500px;
     aspect-ratio: 1;
 }
@@ -45,7 +45,7 @@
     display: flex;
     padding: 20px;
     position: absolute;
-    left: 100px;
+    right: 100px;
 }
 
 

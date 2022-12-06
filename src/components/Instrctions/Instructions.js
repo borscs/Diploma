@@ -12,6 +12,10 @@ export default function Instructions({currentPose}) {
 
     return (
         <div className="instructions-container">
+            <img
+                className="pose-demo-img"
+                src={poseImages[currentPose]}
+            />
             <ul className="instructions-list">
                 {instructions[currentPose].map((instruction) => {
                     return (
@@ -20,10 +24,6 @@ export default function Instructions({currentPose}) {
 
                 })}
             </ul>
-            <img
-                className="pose-demo-img"
-                src={poseImages[currentPose]}
-            />
         </div>
     )
 }

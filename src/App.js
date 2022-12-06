@@ -4,7 +4,6 @@ import "firebase/auth";
 
 import Home from './pages/Authed/Home/Home'
 import Yoga from './pages/Authed/Yoga/Yoga'
-import Tutorials from './pages/Authed/Tutorials/Tutorials'
 import NotRegisterUser from "./pages/NotAuthed/NotRegisterUser";
 import './App.css'
 import PrivateRoute from "./components/Auth/PrivateRoute";
@@ -21,8 +20,7 @@ export default function App() {
                         <Route exact path='/' element={currentUser ? <Home/> : <NotRegisterUser/>}/>
                         <Route path='/home' element={<PrivateRoute><Home/></PrivateRoute>}/>
                         <Route path='/start' element={<PrivateRoute><Yoga/></PrivateRoute>}/>
-                        <Route path='/tutorials' element={<PrivateRoute><Tutorials/></PrivateRoute>}/>
-                        <Route path='/UserData' element={<UserData/>}/>
+                        <Route path='/UserData' element={<PrivateRoute><UserData/></PrivateRoute>}/>
                     </Routes>
                 </Router>
             </AuthProvider>

@@ -8,7 +8,7 @@ import Instructions from '../../../components/Instrctions/Instructions';
 
 import './Yoga.css'
 
-import DropDown from '../../../components/DropDown/DropDown';
+import ListPose from '../../../components/DropDown/DropDown';
 import {poseImages} from '../../../utils/pose_images';
 import {POINTS, keypointConnections} from '../../../utils/data';
 import {drawPoint, drawSegment} from '../../../utils/helper'
@@ -24,8 +24,6 @@ let poseList = [
 ]
 
 let interval;
-// flag variable is used to help capture the time when AI just detect
-// the pose as correct(probability more than threshold)
 let flag = false;
 
 
@@ -90,7 +88,7 @@ const Yoga = () => {
         Warrior: 7,
     }
 
-    function get_center_point(landmarks, left_bodypart, right_bodypart) {
+    function getCenterPoint(landmarks, left_bodypart, right_bodypart) {
         let left = tf.gather(landmarks, left_bodypart, 1);
         let right = tf.gather(landmarks, right_bodypart, 1);
         const center = tf.add(tf.mul(left, 0.5), tf.mul(right, 0.5));
@@ -98,42 +96,38 @@ const Yoga = () => {
 
     }
 
-    function get_pose_size(landmarks, torso_size_multiplier = 2.5) {
-        let hips_center = get_center_point(landmarks, POINTS.LEFT_HIP, POINTS.RIGHT_HIP)
-        let shoulders_center = get_center_point(landmarks, POINTS.LEFT_SHOULDER, POINTS.RIGHT_SHOULDER)
+    function getPoseSize(landmarks, torso_size_multiplier = 2.5) {
+        let hips_center = getCenterPoint(landmarks, POINTS.LEFT_HIP, POINTS.RIGHT_HIP)
+        let shoulders_center = getCenterPoint(landmarks, POINTS.LEFT_SHOULDER, POINTS.RIGHT_SHOULDER)
         let torso_size = tf.norm(tf.sub(shoulders_center, hips_center))
-        let pose_center_new = get_center_point(landmarks, POINTS.LEFT_HIP, POINTS.RIGHT_HIP)
+        let pose_center_new = getCenterPoint(landmarks, POINTS.LEFT_HIP, POINTS.RIGHT_HIP)
         pose_center_new = tf.expandDims(pose_center_new, 1)
 
-        pose_center_new = tf.broadcastTo(pose_center_new,
-            [1, 17, 2]
-        )
-        // return: shape(17,2)
-        let d = tf.gather(tf.sub(landmarks, pose_center_new), 0, 0)
-        let max_dist = tf.max(tf.norm(d, 'euclidean', 0))
+        pose_center_new = tf.broadcastTo(pose_center_new, [1, 17, 2])
 
-        // normalize scale
+        let gather = tf.gather(tf.sub(landmarks, pose_center_new), 0, 0)
+        let max_dist = tf.max(tf.norm(gather, 'euclidean', 0))
+
         let pose_size = tf.maximum(tf.mul(torso_size, torso_size_multiplier), max_dist)
         return pose_size
     }
 
-    function normalize_pose_landmarks(landmarks) {
-        let pose_center = get_center_point(landmarks, POINTS.LEFT_HIP, POINTS.RIGHT_HIP)
+    function normalizePoseLandmarks(landmarks) {
+        let pose_center = getCenterPoint(landmarks, POINTS.LEFT_HIP, POINTS.RIGHT_HIP)
         pose_center = tf.expandDims(pose_center, 1)
-        pose_center = tf.broadcastTo(pose_center,
-            [1, 17, 2]
-        )
+        pose_center = tf.broadcastTo(pose_center, [1, 17, 2])
         landmarks = tf.sub(landmarks, pose_center)
 
-        let pose_size = get_pose_size(landmarks)
+        let pose_size = getPoseSize(landmarks)
         landmarks = tf.div(landmarks, pose_size)
+
         return landmarks
     }
 
-    function landmarks_to_embedding(landmarks) {
-        // normalize landmarks 2D
-        landmarks = normalize_pose_landmarks(tf.expandDims(landmarks, 0))
+    function landmarksToEmbedding(landmarks) {
+        landmarks = normalizePoseLandmarks(tf.expandDims(landmarks, 0))
         let embedding = tf.reshape(landmarks, [1, 34])
+
         return embedding
     }
 
@@ -143,9 +137,7 @@ const Yoga = () => {
         const poseClassifier = await tf.loadLayersModel('https://models.s3.jp-tok.cloud-object-storage.appdomain.cloud/model.json');
         const countAudio = new Audio(count);
         countAudio.loop = true;
-        interval = setInterval(() => {
-            detectPose(detector, poseClassifier, countAudio)
-        }, 100);
+        interval = setInterval(() => {detectPose(detector, poseClassifier, countAudio)}, 100);
     }
 
     const detectPose = async (detector, poseClassifier, countAudio) => {
@@ -157,25 +149,25 @@ const Yoga = () => {
             let notDetected = 0
             const video = webcamRef.current.video
             const pose = await detector.estimatePoses(video)
-            const ctx = canvasRef.current.getContext('2d');
+            const context = canvasRef.current.getContext('2d');
 
-            ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+            context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
             try {
                 const keypoints = pose[0].keypoints
                 let input = keypoints.map((keypoint) => {
                     if (keypoint.score > 0.4) {
                         if (!(keypoint.name === 'left_eye' || keypoint.name === 'right_eye')) {
-                            drawPoint(ctx, keypoint.x, keypoint.y, 8, 'rgb(255,255,255)')
+                            drawPoint(context, keypoint.x, keypoint.y, 8, 'rgb(255,255,255)')
                             let connections = keypointConnections[keypoint.name]
                             try {
                                 connections.forEach((connection) => {
                                     let conName = connection.toUpperCase()
-                                    drawSegment(ctx, [keypoint.x, keypoint.y],
+                                    drawSegment(context, [keypoint.x, keypoint.y],
                                         [keypoints[POINTS[conName]].x,
                                             keypoints[POINTS[conName]].y]
                                         , skeletonColor)
                                 })
-                            } catch (err) {
+                            } catch (error) {
 
                             }
 
@@ -189,13 +181,13 @@ const Yoga = () => {
                     skeletonColor = 'rgb(255,255,255)'
                     return
                 }
-                const processedInput = landmarks_to_embedding(input)
+                const processedInput = landmarksToEmbedding(input)
                 const classification = poseClassifier.predict(processedInput)
 
-                classification.array().then((data) => {
+                classification.array().then((dataPose) => {
                     const classNo = CLASS_NO[currentPose]
-                    console.log("User pose corection: " + data[0][classNo])
-                    if (data[0][classNo] > 0.97) {
+                    console.log("User pose: " + dataPose[0][classNo])
+                    if (dataPose[0][classNo] > 0.97) {
                         if (!flag) {
                             countAudio.play()
                             setStartingTime(new Date(Date()).getTime())
@@ -231,13 +223,18 @@ const Yoga = () => {
          clearInterval(interval);
      }
 
+     const setCurrentPOseHandler = (pose) =>{
+        setCurrentPose(pose);
+        console.log(pose);
+    }
+
     if (isStartPose) {
         return (
             <div className="yoga-container">
                 <div className='home-header'>
                     <h1 className='home-heading'>Yoga Correct Position Helper</h1>
                     <div>
-                        <Link to='/userData'>
+                        <Link to='/UserData'>
                             <button
                                 className="btn btn-secondary"
                                 id="about-btn"
@@ -255,18 +252,13 @@ const Yoga = () => {
                         </Link>
                     </div>
                 </div>
-                <div className="performance-container">
-                    <div className="pose-performance">
-                        <h4>Pose Time: {poseTime} s</h4>
-                    </div>
-                    <div className="pose-performance">
-                        <h4>Best: {bestPerform} s</h4>
-                    </div>
-                    <div className="pose-performance">
-                        {!isNaN(calorie) && <h4>Calorie burned: {calorie.toFixed(4)} cal</h4>}
-                    </div>
-                </div>
                 <div>
+                    <div>
+                        <img
+                            src={poseImages[currentPose]}
+                            className="pose-img"
+                        />
+                    </div>
                     <Webcam
                         width='640px'
                         height='480px'
@@ -274,7 +266,7 @@ const Yoga = () => {
                         ref={webcamRef}
                         style={{
                             position: 'absolute',
-                            left: 120,
+                            right: 120,
                             top: 250,
                             padding: '0px',
                         }}
@@ -286,19 +278,23 @@ const Yoga = () => {
                         height='480px'
                         style={{
                             position: 'absolute',
-                            left: 120,
+                            right: 120,
                             top: 250,
                             zIndex: 1
                         }}
                     >
                     </canvas>
-                    <div>
-                        <img
-                            src={poseImages[currentPose]}
-                            className="pose-img"
-                        />
+                </div>
+                <div className="performance-container">
+                    <div className="pose-performance">
+                        <h4>Pose Time: {poseTime} s</h4>
                     </div>
-
+                    <div className="pose-performance">
+                        <h4>Best: {bestPerform} s</h4>
+                    </div>
+                    <div className="pose-performance">
+                        {!isNaN(calorie) && <h4>Calorie burned: {calorie.toFixed(4)} cal</h4>}
+                    </div>
                 </div>
                 <button
                     onClick={stopPose}
@@ -334,11 +330,12 @@ const Yoga = () => {
             </div>
             <div
                 className="yoga-container"
+                 style={{marginTop: "5%"}}
             >
-                <DropDown
+                <ListPose
                     poseList={poseList}
                     currentPose={currentPose}
-                    setCurrentPose={setCurrentPose}
+                    setCurrentPose={setCurrentPOseHandler}
                 />
                 <Instructions
                     currentPose={currentPose}
