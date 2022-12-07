@@ -3,7 +3,7 @@ import * as tf from '@tensorflow/tfjs';
 import React, {useRef, useState, useEffect, Fragment} from 'react'
 import Webcam from 'react-webcam'
 import {count} from '../../../utils/music';
-import { useAuth} from "../../../contexts/AuthContext";
+import {useAuth} from "../../../contexts/AuthContext";
 import Instructions from '../../../components/Instrctions/Instructions';
 
 import './Yoga.css'
@@ -13,8 +13,9 @@ import {poseImages} from '../../../utils/pose_images';
 import {POINTS, keypointConnections} from '../../../utils/data';
 import {drawPoint, drawSegment} from '../../../utils/helper'
 import {Link} from "react-router-dom";
-import { getDoc, doc, updateDoc } from 'firebase/firestore'
+import {getDoc, doc, updateDoc} from 'firebase/firestore'
 import {db} from "../../../utils/firebase/firebase";
+import Grid from "@mui/material/Grid";
 
 
 let skeletonColor = 'rgb(255,255,255)'
@@ -26,6 +27,31 @@ let poseList = [
 let interval;
 let flag = false;
 
+const YogaHeader = () => {
+    return (
+        <div className='home-header'>
+            <h1 className='home-heading'>Yoga Correct Position Helper</h1>
+            <div>
+                <Link to='/UserData'>
+                    <button
+                        className="btn btn-secondary"
+                        id="about-btn"
+                    >
+                        UserData
+                    </button>
+                </Link>
+                <Link to='/home'>
+                    <button
+                        className="btn btn-secondary"
+                        id="about-btn"
+                    >
+                        Home
+                    </button>
+                </Link>
+            </div>
+        </div>
+    )
+};
 
 const Yoga = () => {
     const webcamRef = useRef(null);
@@ -61,7 +87,7 @@ const Yoga = () => {
         if (flag) {
             setPoseTime(timeDiff);
             if (poseTime !== 0 || !isNaN) {
-                setCalorie(calorie + cal*userData.weight);
+                setCalorie(calorie + cal * userData.weight);
                 console.log("caloria egetes: " + calorie);
             }
 
@@ -137,7 +163,9 @@ const Yoga = () => {
         const poseClassifier = await tf.loadLayersModel('https://models.s3.jp-tok.cloud-object-storage.appdomain.cloud/model.json');
         const countAudio = new Audio(count);
         countAudio.loop = true;
-        interval = setInterval(() => {detectPose(detector, poseClassifier, countAudio)}, 100);
+        interval = setInterval(() => {
+            detectPose(detector, poseClassifier, countAudio)
+        }, 100);
     }
 
     const detectPose = async (detector, poseClassifier, countAudio) => {
@@ -203,29 +231,36 @@ const Yoga = () => {
                     }
                 });
             } catch (err) {
-                console.log(err)
             }
         }
     }
 
-    async function sentData(){
-           await updateDoc(doc(db, "Users", currentUser.uid.toString()), {data: [...userData.data, {time: poseTime, best: bestPerform, cal: calorie, pose: currentPose}]})
+    async function sentData() {
+        await updateDoc(doc(db, "Users", currentUser.uid.toString()), {
+            data: [...userData.data, {
+                time: poseTime,
+                best: bestPerform,
+                cal: calorie,
+                pose: currentPose
+            }]
+        })
     }
 
     function startYoga() {
         setIsStartPose(true);
-        runMoveNet().catch(e => console.log(e));
+        runMoveNet().catch(e => {
+        });
     }
 
     function stopPose() {
-        sentData().then((e)=> {console.log(e)});
-         setIsStartPose(false);
-         clearInterval(interval);
-     }
+        sentData().then((e) => {
+        });
+        setIsStartPose(false);
+        clearInterval(interval);
+    }
 
-     const setCurrentPOseHandler = (pose) =>{
+    const setCurrentPOseHandler = (pose) => {
         setCurrentPose(pose);
-        console.log(pose);
     }
 
     if (isStartPose) {
@@ -252,39 +287,41 @@ const Yoga = () => {
                         </Link>
                     </div>
                 </div>
-                <div>
-                    <div>
+                <Grid container>
+                    <Grid item>
                         <img
                             src={poseImages[currentPose]}
                             className="pose-img"
                         />
-                    </div>
-                    <Webcam
-                        width='640px'
-                        height='480px'
-                        id="webcam"
-                        ref={webcamRef}
-                        style={{
-                            position: 'absolute',
-                            right: 120,
-                            top: 250,
-                            padding: '0px',
-                        }}
-                    />
-                    <canvas
-                        ref={canvasRef}
-                        id="my-canvas"
-                        width='640px'
-                        height='480px'
-                        style={{
-                            position: 'absolute',
-                            right: 120,
-                            top: 250,
-                            zIndex: 1
-                        }}
-                    >
-                    </canvas>
-                </div>
+                    </Grid>
+                    <Grid item>
+                        <Webcam
+                            width='640px'
+                            height='480px'
+                            id="webcam"
+                            ref={webcamRef}
+                            style={{
+                                position: 'absolute',
+                                right: 120,
+                                top: 250,
+                                padding: '0px',
+                            }}
+                        />
+                        <canvas
+                            ref={canvasRef}
+                            id="my-canvas"
+                            width='640px'
+                            height='480px'
+                            style={{
+                                position: 'absolute',
+                                right: 120,
+                                top: 250,
+                                zIndex: 1
+                            }}
+                        >
+                        </canvas>
+                    </Grid>
+                </Grid>
                 <div className="performance-container">
                     <div className="pose-performance">
                         <h4>Pose Time: {poseTime} s</h4>
@@ -296,6 +333,7 @@ const Yoga = () => {
                         {!isNaN(calorie) && <h4>Calorie burned: {calorie.toFixed(4)} cal</h4>}
                     </div>
                 </div>
+
                 <button
                     onClick={stopPose}
                     className="secondary-btn"
@@ -307,30 +345,10 @@ const Yoga = () => {
 
     return (
         <div className="yoga-container">
-            <div className='home-header'>
-                <h1 className='home-heading'>Yoga Correct Position Helper</h1>
-                <div>
-                    <Link to='/userData'>
-                        <button
-                            className="btn btn-secondary"
-                            id="about-btn"
-                        >
-                            UserData
-                        </button>
-                    </Link>
-                    <Link to='/home'>
-                        <button
-                            className="btn btn-secondary"
-                            id="about-btn"
-                        >
-                            Home
-                        </button>
-                    </Link>
-                </div>
-            </div>
+            <YogaHeader/>
             <div
                 className="yoga-container"
-                 style={{marginTop: "5%"}}
+                style={{marginTop: "5%"}}
             >
                 <ListPose
                     poseList={poseList}
@@ -348,6 +366,6 @@ const Yoga = () => {
             </div>
         </div>
     );
-}
+};
 
-export default Yoga
+export default Yoga;
