@@ -24,6 +24,17 @@ let poseList = [
     'Shoulderstand', 'Traingle'
 ]
 
+const POSES = {
+    Chair: 0,
+    Cobra: 1,
+    Dog: 2,
+    No_Pose: 3,
+    Shoulderstand: 4,
+    Traingle: 5,
+    Tree: 6,
+    Warrior: 7,
+}
+
 let interval;
 let flag = false;
 
@@ -66,6 +77,7 @@ const Yoga = () => {
     const [isStartPose, setIsStartPose] = useState(false);
     const [userData, setUserData] = useState('');
     const {currentUser} = useAuth();
+
     let cal = ((2.5 * 0.999619048 * 3.5) / 200) / userData.height;
 
     useEffect(async () => {
@@ -103,18 +115,7 @@ const Yoga = () => {
         setBestPerform(0);
     }, [currentPose])
 
-    const CLASS_NO = {
-        Chair: 0,
-        Cobra: 1,
-        Dog: 2,
-        No_Pose: 3,
-        Shoulderstand: 4,
-        Traingle: 5,
-        Tree: 6,
-        Warrior: 7,
-    }
-
-    function getCenterPoint(landmarks, left_bodypart, right_bodypart) {
+    const  getCenterPoint = (landmarks, left_bodypart, right_bodypart) => {
         let left = tf.gather(landmarks, left_bodypart, 1);
         let right = tf.gather(landmarks, right_bodypart, 1);
         const center = tf.add(tf.mul(left, 0.5), tf.mul(right, 0.5));
@@ -122,7 +123,7 @@ const Yoga = () => {
 
     }
 
-    function getPoseSize(landmarks, torso_size_multiplier = 2.5) {
+    const  getPoseSize = (landmarks, torso_size_multiplier = 2.5) => {
         let hips_center = getCenterPoint(landmarks, POINTS.LEFT_HIP, POINTS.RIGHT_HIP)
         let shoulders_center = getCenterPoint(landmarks, POINTS.LEFT_SHOULDER, POINTS.RIGHT_SHOULDER)
         let torso_size = tf.norm(tf.sub(shoulders_center, hips_center))
@@ -138,7 +139,7 @@ const Yoga = () => {
         return pose_size
     }
 
-    function normalizePoseLandmarks(landmarks) {
+    const normalizePoseLandmarks = (landmarks) => {
         let pose_center = getCenterPoint(landmarks, POINTS.LEFT_HIP, POINTS.RIGHT_HIP)
         pose_center = tf.expandDims(pose_center, 1)
         pose_center = tf.broadcastTo(pose_center, [1, 17, 2])
@@ -150,7 +151,7 @@ const Yoga = () => {
         return landmarks
     }
 
-    function landmarksToEmbedding(landmarks) {
+    const landmarksToEmbedding = (landmarks) => {
         landmarks = normalizePoseLandmarks(tf.expandDims(landmarks, 0))
         let embedding = tf.reshape(landmarks, [1, 34])
 
@@ -196,9 +197,7 @@ const Yoga = () => {
                                         , skeletonColor)
                                 })
                             } catch (error) {
-
                             }
-
                         }
                     } else {
                         notDetected += 1
@@ -213,9 +212,8 @@ const Yoga = () => {
                 const classification = poseClassifier.predict(processedInput)
 
                 classification.array().then((dataPose) => {
-                    const classNo = CLASS_NO[currentPose]
-                    console.log("User pose: " + dataPose[0][classNo])
-                    if (dataPose[0][classNo] > 0.97) {
+                    const poses = POSES[currentPose]
+                    if (dataPose[0][poses] > 0.97) {
                         if (!flag) {
                             countAudio.play()
                             setStartingTime(new Date(Date()).getTime())
@@ -235,7 +233,7 @@ const Yoga = () => {
         }
     }
 
-    async function sentData() {
+     const  sentData = async() =>{
         await updateDoc(doc(db, "Users", currentUser.uid.toString()), {
             data: [...userData.data, {
                 time: poseTime,
@@ -246,13 +244,13 @@ const Yoga = () => {
         })
     }
 
-    function startYoga() {
+    const startYoga = () =>{
         setIsStartPose(true);
         runMoveNet().catch(e => {
         });
     }
 
-    function stopPose() {
+    const stopPose = () => {
         sentData().then((e) => {
         });
         setIsStartPose(false);
