@@ -19,7 +19,8 @@ import Grid from "@mui/material/Grid";
 
 
 let skeletonColor = 'rgb(255,255,255)'
-let poseList = [
+
+const POSELIST = [
     'Tree', 'Chair', 'Cobra', 'Warrior', 'Dog',
     'Shoulderstand', 'Traingle'
 ]
@@ -65,16 +66,16 @@ const YogaHeader = () => {
 };
 
 const Yoga = () => {
-    const webcamRef = useRef(null);
-    const canvasRef = useRef(null);
+    const webcam = useRef(null);
+    const canvas = useRef(null);
 
     const [startingTime, setStartingTime] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
     const [poseTime, setPoseTime] = useState(0);
-    const [bestPerform, setBestPerform] = useState(0);
+    const [bestTime, setBestTime] = useState(0);
     const [calorie, setCalorie] = useState(0);
     const [currentPose, setCurrentPose] = useState('Tree');
-    const [isStartPose, setIsStartPose] = useState(false);
+    const [startPose, setStartPose] = useState(false);
     const [userData, setUserData] = useState('');
     const {currentUser} = useAuth();
 
@@ -104,49 +105,50 @@ const Yoga = () => {
             }
 
         }
-        if (poseTime > bestPerform) {
-            setBestPerform(timeDiff);
+        if (bestTime < poseTime) {
+            setBestTime(timeDiff);
         }
     }, [currentTime]);
 
     useEffect(() => {
         setCurrentTime(0);
         setPoseTime(0);
-        setBestPerform(0);
+        setBestTime(0);
     }, [currentPose])
 
     const  getCenterPoint = (landmarks, left_bodypart, right_bodypart) => {
-        let left = tf.gather(landmarks, left_bodypart, 1);
-        let right = tf.gather(landmarks, right_bodypart, 1);
+        const left = tf.gather(landmarks, left_bodypart, 1);
+        const right = tf.gather(landmarks, right_bodypart, 1);
         const center = tf.add(tf.mul(left, 0.5), tf.mul(right, 0.5));
+
         return center;
 
     }
 
     const  getPoseSize = (landmarks, torso_size_multiplier = 2.5) => {
-        let hips_center = getCenterPoint(landmarks, POINTS.LEFT_HIP, POINTS.RIGHT_HIP)
-        let shoulders_center = getCenterPoint(landmarks, POINTS.LEFT_SHOULDER, POINTS.RIGHT_SHOULDER)
-        let torso_size = tf.norm(tf.sub(shoulders_center, hips_center))
-        let pose_center_new = getCenterPoint(landmarks, POINTS.LEFT_HIP, POINTS.RIGHT_HIP)
-        pose_center_new = tf.expandDims(pose_center_new, 1)
+        const hipsCenter = getCenterPoint(landmarks, POINTS.LEFT_HIP, POINTS.RIGHT_HIP)
+        const shouldersCenter = getCenterPoint(landmarks, POINTS.LEFT_SHOULDER, POINTS.RIGHT_SHOULDER)
+        const torsoSize = tf.norm(tf.sub(shouldersCenter, hipsCenter))
 
-        pose_center_new = tf.broadcastTo(pose_center_new, [1, 17, 2])
+        let poseCenterNew = getCenterPoint(landmarks, POINTS.LEFT_HIP, POINTS.RIGHT_HIP)
+        poseCenterNew = tf.expandDims(poseCenterNew, 1)
+        poseCenterNew = tf.broadcastTo(poseCenterNew, [1, 17, 2])
 
-        let gather = tf.gather(tf.sub(landmarks, pose_center_new), 0, 0)
-        let max_dist = tf.max(tf.norm(gather, 'euclidean', 0))
+        const gather = tf.gather(tf.sub(landmarks, poseCenterNew), 0, 0)
+        const maxDist = tf.max(tf.norm(gather, 'euclidean', 0))
+        const poseSize = tf.maximum(tf.mul(torsoSize, torso_size_multiplier), maxDist)
 
-        let pose_size = tf.maximum(tf.mul(torso_size, torso_size_multiplier), max_dist)
-        return pose_size
+        return poseSize
     }
 
     const normalizePoseLandmarks = (landmarks) => {
-        let pose_center = getCenterPoint(landmarks, POINTS.LEFT_HIP, POINTS.RIGHT_HIP)
-        pose_center = tf.expandDims(pose_center, 1)
-        pose_center = tf.broadcastTo(pose_center, [1, 17, 2])
-        landmarks = tf.sub(landmarks, pose_center)
+        let poseCenter = getCenterPoint(landmarks, POINTS.LEFT_HIP, POINTS.RIGHT_HIP)
+        poseCenter = tf.expandDims(poseCenter, 1)
+        poseCenter = tf.broadcastTo(poseCenter, [1, 17, 2])
+        landmarks = tf.sub(landmarks, poseCenter)
 
-        let pose_size = getPoseSize(landmarks)
-        landmarks = tf.div(landmarks, pose_size)
+        let poseSize = getPoseSize(landmarks)
+        landmarks = tf.div(landmarks, poseSize)
 
         return landmarks
     }
@@ -171,22 +173,22 @@ const Yoga = () => {
 
     const detectPose = async (detector, poseClassifier, countAudio) => {
         if (
-            typeof webcamRef.current !== "undefined" &&
-            webcamRef.current !== null &&
-            webcamRef.current.video.readyState === 4
+            typeof webcam.current !== "undefined" &&
+            webcam.current !== null &&
+            webcam.current.video.readyState === 4
         ) {
             let notDetected = 0
-            const video = webcamRef.current.video
-            const pose = await detector.estimatePoses(video)
-            const context = canvasRef.current.getContext('2d');
 
-            context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+            const pose = await detector.estimatePoses( webcam.current.video)
+            const context = canvas.current.getContext('2d');
+
+            context.clearRect(0, 0, canvas.current.width, canvas.current.height);
             try {
                 const keypoints = pose[0].keypoints
                 let input = keypoints.map((keypoint) => {
-                    if (keypoint.score > 0.4) {
+                    if (keypoint.score > 0.5) {
                         if (!(keypoint.name === 'left_eye' || keypoint.name === 'right_eye')) {
-                            drawPoint(context, keypoint.x, keypoint.y, 8, 'rgb(255,255,255)')
+                            drawPoint(context, keypoint.x, keypoint.y, 8, skeletonColor)
                             let connections = keypointConnections[keypoint.name]
                             try {
                                 connections.forEach((connection) => {
@@ -237,7 +239,7 @@ const Yoga = () => {
         await updateDoc(doc(db, "Users", currentUser.uid.toString()), {
             data: [...userData.data, {
                 time: poseTime,
-                best: bestPerform,
+                best: bestTime,
                 cal: calorie,
                 pose: currentPose
             }]
@@ -245,15 +247,15 @@ const Yoga = () => {
     }
 
     const startYoga = () =>{
-        setIsStartPose(true);
+        setStartPose(true);
         runMoveNet().catch(e => {
         });
     }
 
     const stopPose = () => {
+        setStartPose(false);
         sentData().then((e) => {
         });
-        setIsStartPose(false);
         clearInterval(interval);
     }
 
@@ -261,30 +263,10 @@ const Yoga = () => {
         setCurrentPose(pose);
     }
 
-    if (isStartPose) {
+    if (startPose) {
         return (
             <div className="yoga-container">
-                <div className='home-header'>
-                    <h1 className='home-heading'>Yoga Correct Position Helper</h1>
-                    <div>
-                        <Link to='/UserData'>
-                            <button
-                                className="btn btn-secondary"
-                                id="about-btn"
-                            >
-                                UserData
-                            </button>
-                        </Link>
-                        <Link to='/home'>
-                            <button
-                                className="btn btn-secondary"
-                                id="about-btn"
-                            >
-                                Home
-                            </button>
-                        </Link>
-                    </div>
-                </div>
+                <YogaHeader/>
                 <Grid container>
                     <Grid item>
                         <img
@@ -297,7 +279,7 @@ const Yoga = () => {
                             width='640px'
                             height='480px'
                             id="webcam"
-                            ref={webcamRef}
+                            ref={webcam}
                             style={{
                                 position: 'absolute',
                                 right: 120,
@@ -306,7 +288,7 @@ const Yoga = () => {
                             }}
                         />
                         <canvas
-                            ref={canvasRef}
+                            ref={canvas}
                             id="my-canvas"
                             width='640px'
                             height='480px'
@@ -325,7 +307,7 @@ const Yoga = () => {
                         <h4>Pose Time: {poseTime} s</h4>
                     </div>
                     <div className="pose-performance">
-                        <h4>Best: {bestPerform} s</h4>
+                        <h4>Best: {bestTime} s</h4>
                     </div>
                     <div className="pose-performance">
                         {!isNaN(calorie) && <h4>Calorie burned: {calorie.toFixed(4)} cal</h4>}
@@ -349,7 +331,7 @@ const Yoga = () => {
                 style={{marginTop: "5%"}}
             >
                 <ListPose
-                    poseList={poseList}
+                    poseList={POSELIST}
                     currentPose={currentPose}
                     setCurrentPose={setCurrentPOseHandler}
                 />

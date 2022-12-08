@@ -6,10 +6,10 @@ import {useAuth} from "../../../contexts/AuthContext";
 
 export default function Home() {
     const {logout} = useAuth();
-    const navigate = useNavigate();
+    const navigation = useNavigate();
     const logOutHandler = () => {
         logout();
-        navigate('/');
+        navigation('/');
     }
     return (
         <div className='home-container'>
